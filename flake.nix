@@ -12,7 +12,7 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
-      project = "project";
+      project = "back-prop";
     in {
       packages.default = pkgs.stdenv.mkDerivation {
         pname = project;
