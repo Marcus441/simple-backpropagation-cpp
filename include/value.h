@@ -16,7 +16,6 @@ public:
 
   friend Value operator+(const Value &lhs, const Value &rhs);
   friend Value operator*(const Value &lhs, const Value &rhs);
-  friend std::ostream &operator<<(std::ostream &os, const Value &v);
 
   // Accessors
   double data() const { return m_state->data; }
@@ -30,3 +29,5 @@ private:
   };
   std::shared_ptr<State> m_state;
 };
+// Export formatting rules
+#include "formatting.h" // IWYU pragma: keep
