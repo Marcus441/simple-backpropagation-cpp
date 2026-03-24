@@ -1,19 +1,31 @@
+#include "util/graphing.h"
 #include "value.h"
 #include <print>
 
 int main() {
-  Value v1{2.0}, v2{-3.0}, v3{10.0};
-  Value result = v1 * v2 + v3;
+  // inputs
+  MAKE_VALUE(x1, 2.0)
+  MAKE_VALUE(x2, 0.0)
 
-  std::println("{:.2f}", result);
+  // weights
+  MAKE_VALUE(w1, -3.0)
+  MAKE_VALUE(w2, 1.0)
 
-  std::print("Children: ");
+  // bias
+  MAKE_VALUE(b, 6.8813735870195432)
 
-  auto children = result.prev();
-  for (size_t i = 0; i < children.size(); ++i) {
-    std::print("{:.2f}", children[i]);
-    std::print("{}", (i == children.size() - 1 ? "" : " "));
-  }
+  MAKE_VALUE(x1w1, x1 * w1)
+  MAKE_VALUE(x2w2, x2 * w2)
+
+  MAKE_VALUE(x1w1x2w2, x1w1 + x2w2)
+  MAKE_VALUE(n, x1w1x2w2 + b)
+
+  MAKE_VALUE(o, n.tanh())
+
+  std::print("{}: {}", o.label(), o.data());
+
+  util::graphing::export_to_dot(o, "file.dot");
   std::println("");
+
   return 0;
 }
