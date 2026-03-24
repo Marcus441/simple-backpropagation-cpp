@@ -18,7 +18,7 @@
         pname = project;
         version = "0.1.0";
         src = ./.;
-        nativeBuildInputs = [pkgs.cmake pkgs.ninja];
+        nativeBuildInputs = [pkgs.clang pkgs.cmake pkgs.ninja];
         buildInputs = [];
       };
 
@@ -26,7 +26,7 @@
         name = project;
         inputsFrom = [self.packages.${system}.default];
         nativeBuildInputs = with pkgs; [
-          clang
+          graphviz
           clang-tools
           lldb
           gdb
