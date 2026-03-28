@@ -29,15 +29,15 @@ public:
   friend Value operator*(const Value &lhs, const Value &rhs);
 
   // Accessors
-  const std::string &label() const { return m_label; }
+  const std::string &label() const { return m_state->label; }
   double data() const { return m_state->data; }
   double grad() const { return m_state->grad; }
   std::vector<Value> prev() const { return m_state->prev; }
-  Operation op() const { return m_op; }
+  Operation op() const { return m_state->op; }
   const void *id() const { return m_state.get(); }
 
   // Setters
-  void label(std::string label) { m_label = std::move(label); }
+  void label(std::string label) { m_state->label = std::move(label); }
 
   // Math
   Value tanh();
@@ -48,10 +48,10 @@ private:
     double data;
     std::vector<Value> prev;
     State(double d, std::vector<Value> p = {}) : data(d), prev(p) {};
+    Operation op = Operation::NONE;
+    std::string label;
   };
   std::shared_ptr<State> m_state;
-  Operation m_op = Operation::NONE;
-  std::string m_label;
 };
 
 // Export formatting rules
