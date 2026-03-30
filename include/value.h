@@ -1,13 +1,10 @@
 #pragma once
 
+#include <functional>
 #include <initializer_list>
 #include <memory>
 #include <string>
 #include <vector>
-
-#define MAKE_VALUE(name, val)                                                  \
-  Value name{val};                                                             \
-  name.label(#name);
 
 enum class Operation {
   ADD,
@@ -35,9 +32,11 @@ public:
   std::vector<Value> prev() const { return m_state->prev; }
   Operation op() const { return m_state->op; }
   const void *id() const { return m_state.get(); }
+  void backward();
 
   // Setters
   void label(std::string label) { m_state->label = std::move(label); }
+  void grad(double grad) const { m_state->grad += grad; }
 
   // Math
   Value tanh();
@@ -50,8 +49,12 @@ private:
     State(double d, std::vector<Value> p = {}) : data(d), prev(p) {};
     Operation op = Operation::NONE;
     std::string label;
+    std::function<void()> backward = [] {};
   };
   std::shared_ptr<State> m_state;
+  void set_backward(std::function<void()> backward) {
+    m_state->backward = std::move(backward);
+  }
 };
 
 // Export formatting rules
