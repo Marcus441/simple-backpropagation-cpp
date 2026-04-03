@@ -7,53 +7,53 @@
 #include <vector>
 
 enum class Operation {
-  ADD,
-  MULTIPLY,
-  TANH,
-  NONE,
+  kAdd,
+  kMultiply,
+  kTanh,
+  kNone,
 };
 
 class Value {
 public:
   // Base constructor
-  Value(double data) : m_state(std::make_shared<State>(data)) {}
+  Value(double data) : m_state_(std::make_shared<State>(data)) {}
 
   // Graph constructor
   Value(double data, std::initializer_list<Value> children)
-      : m_state(std::make_shared<State>(data, children)) {}
+      : m_state_(std::make_shared<State>(data, children)) {}
 
   friend Value operator+(const Value &lhs, const Value &rhs);
   friend Value operator*(const Value &lhs, const Value &rhs);
 
   // Accessors
-  const std::string &label() const { return m_state->label; }
-  double data() const { return m_state->data; }
-  double grad() const { return m_state->grad; }
-  std::vector<Value> prev() const { return m_state->prev; }
-  Operation op() const { return m_state->op; }
-  const void *id() const { return m_state.get(); }
-  void backward();
+  const std::string &Label() const { return m_state_->label_; }
+  double Data() const { return m_state_->data_; }
+  double Grad() const { return m_state_->grad_; }
+  std::vector<Value> Prev() const { return m_state_->prev_; }
+  Operation Op() const { return m_state_->op_; }
+  const void *Id() const { return m_state_.get(); }
+  void Backward();
 
   // Setters
-  void label(std::string label) { m_state->label = std::move(label); }
-  void grad(double grad) const { m_state->grad += grad; }
+  void Label(std::string label) { m_state_->label_ = std::move(label); }
+  void Grad(double grad) const { m_state_->grad_ += grad; }
 
   // Math
-  Value tanh();
+  Value Tanh();
 
 private:
   struct State {
-    double grad{0.0};
-    double data;
-    std::vector<Value> prev;
-    State(double d, std::vector<Value> p = {}) : data(d), prev(p) {};
-    Operation op = Operation::NONE;
-    std::string label;
-    std::function<void()> backward = [] {};
+    double grad_{0.0};
+    double data_;
+    std::vector<Value> prev_;
+    State(double d, std::vector<Value> p = {}) : data_(d), prev_(p) {};
+    Operation op_ = Operation::kNone;
+    std::string label_;
+    std::function<void()> backward_ = [] {};
   };
-  std::shared_ptr<State> m_state;
-  void set_backward(std::function<void()> backward) {
-    m_state->backward = std::move(backward);
+  std::shared_ptr<State> m_state_;
+  void SetBackward(std::function<void()> backward) {
+    m_state_->backward_ = std::move(backward);
   }
 };
 

@@ -4,6 +4,6 @@
 
 namespace util::graphing {
 
-void export_to_dot(const Value &root, const std::string &filename);
+void ExportToDot(const Value &root, const std::string &filename);
 
 } // namespace util::graphing

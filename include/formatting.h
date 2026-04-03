@@ -4,7 +4,7 @@
 #include <format>
 
 template <> struct std::formatter<Value> : std::formatter<double> {
-  auto format(const Value &v, std::format_context &ctx) const {
-    return std::formatter<double>::format(v.data(), ctx);
+  auto format(const Value &value, std::format_context &ctx) const {
+    return std::formatter<double>::format(value.Data(), ctx);
   }
 };

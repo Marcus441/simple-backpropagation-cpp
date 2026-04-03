@@ -1,0 +1,45 @@
+---
+Checks: >
+  -*,
+  readability-identifier-naming,
+  bugprone-use-after-move,
+  bugprone-unused-return-value,
+  performance-unnecessary-copy-initialization,
+  performance-for-range-copy,
+  modernize-make-shared,
+  modernize-use-nullptr,
+  modernize-use-emplace
+
+WarningsAsErrors: "readability-identifier-naming, bugprone-*, performance-*"
+
+CheckOptions:
+  - key:             readability-identifier-naming.ClassCase
+    value:           PascalCase
+  - key:             readability-identifier-naming.StructCase
+    value:           PascalCase
+  - key:             readability-identifier-naming.FunctionCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.MethodCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.PublicMethodCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.PrivateMethodCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.VariableCase
+    value:           snake_case
+  - key:             readability-identifier-naming.ParameterCase
+    value:           snake_case
+  - key:             readability-identifier-naming.MemberCase
+    value:           snake_case
+  - key:             readability-identifier-naming.MemberSuffix
+    value:           _
+  - key:             readability-identifier-naming.ConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.ConstantPrefix
+    value:           k
+  - key:             readability-identifier-naming.EnumConstantCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.EnumConstantPrefix
+    value:           k
+FormatStyle: file
+...

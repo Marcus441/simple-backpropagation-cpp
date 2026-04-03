@@ -3,57 +3,57 @@
 #include <functional>
 #include <set>
 
-void Value::backward() {
+void Value::Backward() {
   std::vector<Value> topo;
   std::set<const void *> visited;
 
   std::function<void(Value)> build_topo = [&](Value v) {
-    if (visited.find(v.id()) == visited.end()) {
-      visited.insert(v.id());
-      for (auto &child : v.prev()) {
+    if (visited.find(v.Id()) == visited.end()) {
+      visited.insert(v.Id());
+      for (auto &child : v.Prev()) {
         build_topo(child);
       }
       topo.push_back(v);
     }
   };
   build_topo(*this);
-  this->grad(1.0);
+  this->Grad(1.0);
   for (auto it = topo.rbegin(); it != topo.rend(); ++it) {
-    it->m_state->backward();
+    it->m_state_->backward_();
   }
 }
 
 Value operator+(const Value &lhs, const Value &rhs) {
-  Value result(lhs.m_state->data + rhs.m_state->data, {lhs, rhs});
-  result.m_state->op = Operation::ADD;
+  Value result(lhs.m_state_->data_ + rhs.m_state_->data_, {lhs, rhs});
+  result.m_state_->op_ = Operation::kAdd;
   std::function<void()> backward = [lhs, rhs, result] {
-    lhs.grad(1.0f * result.grad());
-    rhs.grad(1.0f * result.grad());
+    lhs.Grad(1.0f * result.Grad());
+    rhs.Grad(1.0f * result.Grad());
   };
-  result.set_backward(backward);
+  result.SetBackward(backward);
   return result;
 }
 
 Value operator*(const Value &lhs, const Value &rhs) {
-  Value result(lhs.m_state->data * rhs.m_state->data, {lhs, rhs});
-  result.m_state->op = Operation::MULTIPLY;
+  Value result(lhs.m_state_->data_ * rhs.m_state_->data_, {lhs, rhs});
+  result.m_state_->op_ = Operation::kMultiply;
   std::function<void()> backward = [lhs, rhs, result] {
-    lhs.grad(rhs.data() * result.grad());
-    rhs.grad(lhs.data() * result.grad());
+    lhs.Grad(rhs.Data() * result.Grad());
+    rhs.Grad(lhs.Data() * result.Grad());
   };
-  result.set_backward(backward);
+  result.SetBackward(backward);
   return result;
 }
 
-Value Value::tanh() {
-  double x = this->data();
+Value Value::Tanh() {
+  double x = this->Data();
   double tanh_x = (std::exp(2 * x) - 1) / (std::exp(2 * x) + 1);
   Value result = Value(tanh_x, {*this});
-  result.m_state->op = Operation::TANH;
+  result.m_state_->op_ = Operation::kTanh;
 
   std::function<void()> backward = [this, tanh_x, result] {
-    this->grad((1.0 - std::pow(tanh_x, 2)) * result.grad());
+    this->Grad((1.0 - std::pow(tanh_x, 2)) * result.Grad());
   };
-  result.set_backward(backward);
+  result.SetBackward(backward);
   return result;
 }
