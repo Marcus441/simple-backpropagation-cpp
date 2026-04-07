@@ -41,6 +41,11 @@ public:
   // Math
   Value Tanh();
 
+  void ClearGraph() {
+    m_state_->backward_ = nullptr;
+    m_state_->prev_.clear();
+  }
+
 private:
   struct State {
     double grad_{0.0};

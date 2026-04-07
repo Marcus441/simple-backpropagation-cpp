@@ -21,6 +21,9 @@ void Value::Backward() {
   for (auto it = topo.rbegin(); it != topo.rend(); ++it) {
     it->m_state_->backward_();
   }
+  for (auto &node : topo) {
+    node.ClearGraph();
+  }
 }
 
 Value operator+(const Value &lhs, const Value &rhs) {
