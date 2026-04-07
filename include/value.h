@@ -22,8 +22,16 @@ class Value {
   Value(double data, std::initializer_list<Value> children)
       : m_state_(std::make_shared<State>(data, children)) {}
 
+  // Value on Value operations
   friend Value operator+(const Value& lhs, const Value& rhs);
   friend Value operator*(const Value& lhs, const Value& rhs);
+
+  // Scalar on Value
+  friend Value operator*(double lhs, const Value& rhs);
+  friend Value operator+(double lhs, const Value& rhs);
+  // Value on Scalar
+  friend Value operator+(const Value& lhs, double rhs);
+  friend Value operator*(const Value& lhs, double rhs);
 
   // Accessors
   const std::string& Label() const { return m_state_->label_; }
@@ -36,7 +44,6 @@ class Value {
 
   // Setters
   void Label(std::string label) { m_state_->label_ = std::move(label); }
-  void Grad(double grad) const { m_state_->grad_ += grad; }
 
   // Math
   Value Tanh();
@@ -47,6 +54,7 @@ class Value {
   }
 
  private:
+  double& GradRef() const { return m_state_->grad_; }
   struct State {
     double grad_{0.0};
     double data_;
