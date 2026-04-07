@@ -38,12 +38,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 option(USE_SANITIZERS "Enable ASan/UBSan" ON)
 if(USE_SANITIZERS)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        target_compile_options(${PROJECT_NAME} PRIVATE 
-            -fsanitize=address,undefined -fno-omit-frame-pointer
-        )
-        target_link_options(${PROJECT_NAME} PRIVATE 
-            -fsanitize=address,undefined
-        )
+        set(SAN_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer)
+        target_compile_options(${PROJECT_NAME} PRIVATE ${SAN_FLAGS})
+        target_link_options(${PROJECT_NAME} PRIVATE ${SAN_FLAGS})
     endif()
 endif()
 
