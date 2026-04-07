@@ -1,16 +1,17 @@
 #include "value.h"
+
 #include <cmath>
 #include <functional>
 #include <set>
 
 void Value::Backward() {
   std::vector<Value> topo;
-  std::set<const void *> visited;
+  std::set<const void*> visited;
 
   std::function<void(Value)> build_topo = [&](Value v) {
     if (visited.find(v.Id()) == visited.end()) {
       visited.insert(v.Id());
-      for (auto &child : v.Prev()) {
+      for (auto& child : v.Prev()) {
         build_topo(child);
       }
       topo.push_back(v);
@@ -21,12 +22,12 @@ void Value::Backward() {
   for (auto it = topo.rbegin(); it != topo.rend(); ++it) {
     it->m_state_->backward_();
   }
-  for (auto &node : topo) {
+  for (auto& node : topo) {
     node.ClearGraph();
   }
 }
 
-Value operator+(const Value &lhs, const Value &rhs) {
+Value operator+(const Value& lhs, const Value& rhs) {
   Value result(lhs.m_state_->data_ + rhs.m_state_->data_, {lhs, rhs});
   result.m_state_->op_ = Operation::kAdd;
   std::function<void()> backward = [lhs, rhs, result] {
@@ -37,7 +38,7 @@ Value operator+(const Value &lhs, const Value &rhs) {
   return result;
 }
 
-Value operator*(const Value &lhs, const Value &rhs) {
+Value operator*(const Value& lhs, const Value& rhs) {
   Value result(lhs.m_state_->data_ * rhs.m_state_->data_, {lhs, rhs});
   result.m_state_->op_ = Operation::kMultiply;
   std::function<void()> backward = [lhs, rhs, result] {

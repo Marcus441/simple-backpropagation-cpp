@@ -1,6 +1,7 @@
+#include <print>
+
 #include "util/graphing.h"
 #include "value.h"
-#include <print>
 
 int main() {
   // inputs

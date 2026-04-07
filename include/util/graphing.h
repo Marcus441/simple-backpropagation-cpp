@@ -1,9 +1,10 @@
 #pragma once
-#include "value.h"
 #include <string>
+
+#include "value.h"
 
 namespace util::graphing {
 
-void ExportToDot(const Value &root, const std::string &filename);
+void ExportToDot(const Value& root, const std::string& filename);
 
-} // namespace util::graphing
+}  // namespace util::graphing
