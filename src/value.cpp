@@ -62,7 +62,8 @@ Value Value::Tanh() {
 }
 
 Value operator*(double lhs, const Value& rhs) {
-  Value out(lhs * rhs.Data());
+  Value out(lhs * rhs.Data(), {rhs});
+  out.m_state_->op_ = Operation::kMultiply;
   std::function<void(double)> backward = [lhs, rhs](double out_grad) {
     rhs.GradRef() += lhs * out_grad;
   };
@@ -75,7 +76,8 @@ Value operator*(const Value& lhs, double rhs) {
 }
 
 Value operator+(double lhs, const Value& rhs) {
-  Value out(lhs + rhs.Data());
+  Value out(lhs + rhs.Data(), {rhs});
+  out.m_state_->op_ = Operation::kAdd;
   std::function<void(double)> backward = [rhs](double out_grad) { rhs.GradRef() += out_grad; };
   out.SetBackward(backward);
   return out;
