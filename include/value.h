@@ -54,10 +54,12 @@ class Value {
     State(double d, std::vector<Value> p = {}) : data_(d), prev_(p) {};
     Operation op_ = Operation::kNone;
     std::string label_;
-    std::function<void()> backward_ = [] {};
+    std::function<void(double)> backward_ = [](double) {};
   };
   std::shared_ptr<State> m_state_;
-  void SetBackward(std::function<void()> backward) { m_state_->backward_ = std::move(backward); }
+  void SetBackward(std::function<void(double)> backward) {
+    m_state_->backward_ = std::move(backward);
+  }
 };
 
 // Export formatting rules
