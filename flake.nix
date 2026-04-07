@@ -28,6 +28,7 @@
         nativeBuildInputs = with pkgs; [
           graphviz
           clang-tools
+          llvmPackages.bintools
           lldb
           gdb
         ];
