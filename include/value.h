@@ -22,15 +22,14 @@ class Value {
   Value(double data, std::initializer_list<Value> children)
       : m_state_(std::make_shared<State>(data, children)) {}
 
-  // Value on Value operations
+  // Addition
   friend Value operator+(const Value& lhs, const Value& rhs);
-  friend Value operator*(const Value& lhs, const Value& rhs);
-
-  // Scalar on Value
-  friend Value operator*(double lhs, const Value& rhs);
   friend Value operator+(double lhs, const Value& rhs);
-  // Value on Scalar
   friend Value operator+(const Value& lhs, double rhs);
+
+  // Multiplication
+  friend Value operator*(const Value& lhs, const Value& rhs);
+  friend Value operator*(double lhs, const Value& rhs);
   friend Value operator*(const Value& lhs, double rhs);
 
   // Accessors
