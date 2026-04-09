@@ -1,5 +1,3 @@
-#include <print>
-
 #include "util/graphing.h"
 #include "value.h"
 
@@ -32,11 +30,19 @@ int main() {
   Value n{x1w1x2w2 + b};
   n.Label("n");
 
-  Value o{n.Tanh()};
+  // Value o{n.Tanh()};
+  // o.Backward();
+
+  // --- hyperbolic tangent
+
+  Value e((2 * n).Exp());
+  e.Label("e");
+  Value o((e - 1) / (e + 1));
+  o.Label("o");
   o.Backward();
 
+  // --- hyperbolic tangent
   util::graphing::ExportToDot(o, "file.dot");
-  std::println("");
 
   return 0;
 }

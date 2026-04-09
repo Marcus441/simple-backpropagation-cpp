@@ -17,8 +17,16 @@ void BuildDot(const Value& v, std::set<const void*>& visited, std::ofstream& out
     std::string label;
     if (v.Op() == Operation::kAdd)
       label = "+";
+    if (v.Op() == Operation::kSubtract)
+      label = "-";
     if (v.Op() == Operation::kMultiply)
       label = "*";
+    if (v.Op() == Operation::kDivide)
+      label = "/";
+    if (v.Op() == Operation::kExp)
+      label = "^e";
+    if (v.Op() == Operation::kPower)
+      label = "^";
     if (v.Op() == Operation::kTanh)
       label = "tanh";
 
@@ -30,6 +38,8 @@ void BuildDot(const Value& v, std::set<const void*>& visited, std::ofstream& out
     BuildDot(child, visited, out);
     if (v.Op() != Operation::kNone) {
       out << std::format("\tnode_{} -> op_{};\n", child.Id(), id);
+    } else {
+      out << std::format("\tnode_{} -> node_{};\n", child.Id(), id);
     }
   }
 }
