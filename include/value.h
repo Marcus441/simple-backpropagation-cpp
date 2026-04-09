@@ -8,6 +8,7 @@
 
 enum class Operation {
   kAdd,
+  kSubtract,
   kMultiply,
   kDivide,
   kTanh,
@@ -29,6 +30,11 @@ class Value {
   friend Value operator+(const Value& lhs, const Value& rhs);
   friend Value operator+(double lhs, const Value& rhs);
   friend Value operator+(const Value& lhs, double rhs);
+
+  // Subtraction
+  friend Value operator-(const Value& lhs, const Value& rhs);
+  friend Value operator-(double lhs, const Value& rhs);
+  friend Value operator-(const Value& lhs, double rhs);
 
   // Multiplication
   friend Value operator*(const Value& lhs, const Value& rhs);

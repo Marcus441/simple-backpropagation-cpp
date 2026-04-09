@@ -42,6 +42,18 @@ Value operator/(const Value& lhs, const Value& rhs) {
 
   return out;
 }
+
+Value operator-(const Value& lhs, const Value& rhs) {
+  Value out(lhs.Data() - rhs.Data(), {lhs, rhs});
+  out.m_state_->op_ = Operation::kSubtract;
+  std::function<void(double)> backward = [lhs, rhs](double out_grad) {
+    lhs.GradRef() += 1.0f * out_grad;
+    rhs.GradRef() += -1.0f * out_grad;
+  };
+  out.SetBackward(backward);
+  return out;
+}
+
 Value operator+(const Value& lhs, const Value& rhs) {
   Value result(lhs.m_state_->data_ + rhs.m_state_->data_, {lhs, rhs});
   result.m_state_->op_ = Operation::kAdd;
@@ -88,6 +100,7 @@ Value Value::Pow(double other) const {
   out.SetBackward(backward);
   return out;
 }
+
 Value Value::Exp() {
   double x = this->Data();
   double e = std::exp(x);
@@ -113,6 +126,22 @@ Value operator*(double lhs, const Value& rhs) {
 
 Value operator*(const Value& lhs, double rhs) {
   return rhs * lhs;
+}
+
+Value operator-(double lhs, const Value& rhs) {
+  Value out(lhs - rhs.Data(), {rhs});
+  out.m_state_->op_ = Operation::kSubtract;
+  std::function<void(double)> backward = [rhs](double out_grad) { rhs.GradRef() += -1 * out_grad; };
+  out.SetBackward(backward);
+  return out;
+}
+
+Value operator-(const Value& lhs, double rhs) {
+  Value out(lhs.Data() - rhs, {lhs});
+  out.m_state_->op_ = Operation::kSubtract;
+  std::function<void(double)> backward = [lhs](double out_grad) { lhs.GradRef() += out_grad; };
+  out.SetBackward(backward);
+  return out;
 }
 
 Value operator+(double lhs, const Value& rhs) {
