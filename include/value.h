@@ -11,6 +11,7 @@ enum class Operation {
   kMultiply,
   kDivide,
   kTanh,
+  kPower,
   kNone,
 };
 
@@ -50,6 +51,7 @@ class Value {
 
   // Math
   Value Tanh();
+  Value Pow(double other) const;
 
   void ClearGraph() {
     m_state_->backward_ = nullptr;

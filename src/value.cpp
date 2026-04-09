@@ -79,6 +79,15 @@ Value Value::Tanh() {
   return result;
 }
 
+Value Value::Pow(double other) const {
+  Value out(std::pow(this->Data(), other), {*this});
+  out.m_state_->op_ = Operation::kPower;
+  std::function<void(double)> backward = [*this, other](double out_grad) {
+    this->GradRef() += (other * std::pow(this->Data(), other - 1)) * out_grad;
+  };
+  out.SetBackward(backward);
+  return out;
+}
 Value operator*(double lhs, const Value& rhs) {
   Value out(lhs * rhs.Data(), {rhs});
   out.m_state_->op_ = Operation::kMultiply;
