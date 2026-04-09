@@ -9,6 +9,7 @@
 enum class Operation {
   kAdd,
   kMultiply,
+  kDivide,
   kTanh,
   kNone,
 };
@@ -31,6 +32,9 @@ class Value {
   friend Value operator*(const Value& lhs, const Value& rhs);
   friend Value operator*(double lhs, const Value& rhs);
   friend Value operator*(const Value& lhs, double rhs);
+
+  // Division
+  friend Value operator/(const Value& lhs, const Value& rhs);
 
   // Accessors
   const std::string& Label() const { return m_state_->label_; }

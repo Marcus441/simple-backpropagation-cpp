@@ -24,6 +24,24 @@ void Value::Backward() {
   }
 }
 
+Value operator/(const Value& lhs, const Value& rhs) {
+  double l_data = lhs.Data();
+  double r_data = rhs.Data();
+
+  Value out(l_data / r_data, {lhs, rhs});
+  out.m_state_->op_ = Operation::kDivide;
+
+  std::function<void(double)> backward = [lhs, rhs](double out_grad) {
+    double l = lhs.Data();
+    double r = rhs.Data();
+    // Quotient Rule: d/dl (l/r) = 1/r  |  d/dr (l/r) = -l / r^2
+    lhs.GradRef() += (1.0 / r) * out_grad;
+    rhs.GradRef() += (-l / (r * r)) * out_grad;
+  };
+  out.SetBackward(backward);
+
+  return out;
+}
 Value operator+(const Value& lhs, const Value& rhs) {
   Value result(lhs.m_state_->data_ + rhs.m_state_->data_, {lhs, rhs});
   result.m_state_->op_ = Operation::kAdd;
