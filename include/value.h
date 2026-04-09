@@ -11,6 +11,7 @@ enum class Operation {
   kMultiply,
   kDivide,
   kTanh,
+  kExp,
   kPower,
   kNone,
 };
@@ -51,6 +52,7 @@ class Value {
 
   // Math
   Value Tanh();
+  Value Exp();
   Value Pow(double other) const;
 
   void ClearGraph() {

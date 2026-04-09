@@ -88,6 +88,19 @@ Value Value::Pow(double other) const {
   out.SetBackward(backward);
   return out;
 }
+Value Value::Exp() {
+  double x = this->Data();
+  double e = std::exp(x);
+  Value result(e, {*this});
+  result.m_state_->op_ = Operation::kExp;
+  std::function<void(double)> backward = [*this, e](double out_grad) {
+    this->GradRef() += e * out_grad;
+  };
+
+  result.SetBackward(backward);
+  return result;
+}
+
 Value operator*(double lhs, const Value& rhs) {
   Value out(lhs * rhs.Data(), {rhs});
   out.m_state_->op_ = Operation::kMultiply;
