@@ -21,7 +21,7 @@ BinPackParameters: true
 
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex:           '^<.*\.h>'
+  - Regex:           '^<.*\.h(pp)?>'
     Priority:        1
   - Regex:           '^<.*'
     Priority:        2
