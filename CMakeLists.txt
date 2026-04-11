@@ -11,6 +11,7 @@ set(SOURCES
     src/main.cpp
     src/value.cpp
     src/util/graphing.cpp
+    src/neuron.cpp
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)

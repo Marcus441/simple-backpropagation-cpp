@@ -20,6 +20,7 @@ enum class Operation {
 
 class Value {
  public:
+  Value() : Value(0.0) {}
   // Base constructor
   Value(double data) : m_state_(std::make_shared<State>(data)) {}
 
