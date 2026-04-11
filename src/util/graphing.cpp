@@ -1,4 +1,4 @@
-#include "util/graphing.h"
+#include "util/graphing.hpp"
 
 #include <format>
 #include <fstream>

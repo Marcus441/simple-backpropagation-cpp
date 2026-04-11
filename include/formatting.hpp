@@ -2,7 +2,7 @@
 
 #include <format>
 
-#include "value.h"
+#include "value.hpp"
 
 template <>
 struct std::formatter<Value> : std::formatter<double> {

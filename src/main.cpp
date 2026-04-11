@@ -1,7 +1,7 @@
-#include "util/graphing.h"
-#include "value.h"
+#include "util/graphing.hpp"
+#include "value.hpp"
 
-int main() {
+auto main() -> int {
   // inputs
   Value x1{2.0};
   x1.Label("x1");

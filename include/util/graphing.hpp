@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include "value.h"
+#include "value.hpp"
 
 namespace util::graphing {
 

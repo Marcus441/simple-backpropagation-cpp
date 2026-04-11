@@ -17,6 +17,7 @@ compile_commands.json
 *.png
 *.dot
 diff.txt
+
 # [TOOL] Language Server & IDE (Clangd / VSCode / JetBrains)
 # --------------------------------------------------
 .cache/
