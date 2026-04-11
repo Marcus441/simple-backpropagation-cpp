@@ -2,44 +2,43 @@
 
 #include <format>
 #include <fstream>
+#include <print>
 #include <set>
 
 namespace util::graphing {
 void BuildDot(const Value& v, std::set<const void*>& visited, std::ofstream& out) {
   const void* id = v.Id();
-  if (!visited.insert(id).second)
+  if (!visited.insert(id).second) {
     return;
+  }
 
-  out << std::format("\tnode_{} [label=\"{{ {} | data {:.2f} | grad {:.2f}}}\"];\n", v.Id(),
-                     v.Label(), v.Data(), v.Grad());
+  std::println(out, "\tnode_{} [label=\"{{ {} | data {:.2f} | grad {:.2f}}}\"];", v.Id(), v.Label(),
+               v.Data(), v.Grad());
 
   if (v.Op() != Operation::kNone) {
     std::string label;
-    if (v.Op() == Operation::kAdd)
-      label = "+";
-    if (v.Op() == Operation::kSubtract)
-      label = "-";
-    if (v.Op() == Operation::kMultiply)
-      label = "*";
-    if (v.Op() == Operation::kDivide)
-      label = "/";
-    if (v.Op() == Operation::kExp)
-      label = "^e";
-    if (v.Op() == Operation::kPower)
-      label = "^";
-    if (v.Op() == Operation::kTanh)
-      label = "tanh";
-
-    out << std::format("\top_{0} [label=\"{1}\", shape=circle];\n", id, label);
-    out << std::format("\top_{0} -> node_{0};\n", id);
+    // clang-format off
+    switch (v.Op()) {
+      case Operation::kAdd:      label = "+";    break;
+      case Operation::kSubtract: label = "-";    break;
+      case Operation::kMultiply: label = "*";    break;
+      case Operation::kDivide:   label = "/";    break;
+      case Operation::kExp:      label = "^e";   break;
+      case Operation::kPower:    label = "^";    break;
+      case Operation::kTanh:     label = "tanh"; break;
+      case Operation::kNone:     break;
+    }
+    // clang-format on
+    std::println(out, "\top_{0} [label=\"{1}\", shape=circle];", id, label);
+    std::println(out, "\top_{0} -> node_{0};", id);
   }
 
   for (const auto& child : v.Prev()) {
     BuildDot(child, visited, out);
     if (v.Op() != Operation::kNone) {
-      out << std::format("\tnode_{} -> op_{};\n", child.Id(), id);
+      std::println(out, "\tnode_{} -> op_{};", child.Id(), id);
     } else {
-      out << std::format("\tnode_{} -> node_{};\n", child.Id(), id);
+      std::println(out, "\tnode_{} -> node_{};", child.Id(), id);
     }
   }
 }
