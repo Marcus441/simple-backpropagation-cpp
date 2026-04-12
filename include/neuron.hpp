@@ -6,7 +6,7 @@
 class Neuron {
  public:
   Neuron(int n_inputs);
-  auto operator()(const std::vector<double>& x) -> Value;
+  auto operator()(const std::vector<Value>& x) const -> Value;
 
  private:
   static std::mt19937 rng;

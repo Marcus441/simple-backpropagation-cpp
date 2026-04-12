@@ -1,17 +1,14 @@
-#include <print>
 #include <vector>
 
-#include "neuron.hpp"
+#include "MLP.hpp"
 #include "util/graphing.hpp"
-#include "value.hpp"
 
 auto main() -> int {
-  std::vector<double> input_data{2.0, 3.0};
-  Neuron n(2);
-  Value o = n(input_data);
-  std::print("{:.2f}", o.Data());
+  MLP mlp({{.n_in_ = 3, .n_out_ = 4}, {.n_in_ = 4, .n_out_ = 4}, {.n_in_ = 4, .n_out_ = 1}});
 
-  util::graphing::ExportToDot(o, "file.dot");
+  std::vector<double> x{2, 3, -1};
+
+  util::graphing::ExportToDot(mlp(x), "file.dot");
 
   return 0;
 }

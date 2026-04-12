@@ -14,7 +14,7 @@ Neuron::Neuron(int n_inputs) {
   }
 };
 
-auto Neuron::operator()(const std::vector<double>& x) -> Value {
+auto Neuron::operator()(const std::vector<Value>& x) const -> Value {
   assert(x.size() == w_.size());
   Value weight_sum;
   for (size_t i = 0; i < w_.size(); ++i) {

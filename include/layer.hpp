@@ -10,7 +10,7 @@ struct LayerSize {
 class Layer {
  public:
   Layer(LayerSize s);
-  auto operator()(const std::vector<double>& x) -> std::vector<Value>;
+  auto operator()(const std::vector<Value>& x) const -> std::vector<Value>;
 
  private:
   std::vector<Neuron> neurons_;

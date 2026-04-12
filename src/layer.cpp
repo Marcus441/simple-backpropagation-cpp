@@ -10,9 +10,9 @@ Layer::Layer(LayerSize s) {
   }
 }
 
-auto Layer::operator()(const std::vector<double>& x) -> std::vector<Value> {
+auto Layer::operator()(const std::vector<Value>& x) const -> std::vector<Value> {
   std::vector<Value> out;
-  for (auto& neuron : neurons_) {
+  for (const auto& neuron : neurons_) {
     out.emplace_back(neuron(x));
   }
   return out;
