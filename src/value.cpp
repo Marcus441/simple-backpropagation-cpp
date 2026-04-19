@@ -4,25 +4,21 @@
 #include <functional>
 #include <ranges>
 #include <set>
-#include <stack>
 
 void Value::Backward() {
   std::vector<Value> topo;
   std::set<const void*> visited;
-  std::stack<Value> stack;
-  stack.push(*this);
 
-  while (!stack.empty()) {
-    const Value& v(stack.top());
-    stack.pop();
+  std::function<void(Value)> build_topo = [&](Value v) {
     if (!visited.contains(v.Id())) {
       visited.insert(v.Id());
-      topo.push_back(v);
       for (auto& child : v.Prev()) {
-        stack.push(child);
+        build_topo(child);
       }
+      topo.push_back(v);
     }
   };
+  build_topo(*this);
   this->m_state_->grad_ = 1.0;
   for (auto& it : std::ranges::reverse_view(topo)) {
     it.m_state_->backward_(it.Grad());
