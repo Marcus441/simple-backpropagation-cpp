@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-enum class Operation {
+enum class Operation : std::uint8_t {
   kAdd,
   kSubtract,
   kMultiply,
