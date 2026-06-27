@@ -1,5 +1,6 @@
 #include "layer.hpp"
 
+#include <memory>
 #include <vector>
 
 #include "value.hpp"
@@ -13,8 +14,9 @@ Layer::Layer(LayerSize s) {
   }
 }
 
-auto Layer::operator()(const std::vector<Value>& x) const -> std::vector<Value> {
+std::vector<Value> Layer::operator()(const std::vector<Value>& x) const {
   std::vector<Value> out;
+  out.reserve(neurons_.size());
   for (const auto& neuron : neurons_) {
     out.emplace_back(neuron(x));
   }

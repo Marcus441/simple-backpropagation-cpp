@@ -7,10 +7,8 @@
 class MLP {
  public:
   MLP(std::initializer_list<LayerSize> sizes);
-  auto operator()(std::vector<double> x) -> Value;
-  [[nodiscard]] auto Parameters() const -> std::weak_ptr<std::vector<Value>> {
-    return parameters_;
-  };
+  Value operator()(const std::vector<double>& x);
+  [[nodiscard]] std::weak_ptr<std::vector<Value>> Parameters() const { return parameters_; }
 
  private:
   std::vector<Layer> layers_;

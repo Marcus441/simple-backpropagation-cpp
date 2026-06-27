@@ -4,12 +4,13 @@
 #include <functional>
 #include <ranges>
 #include <set>
+#include <vector>
 
 void Value::Backward() {
   std::vector<Value> topo;
   std::set<const void*> visited;
 
-  std::function<void(Value)> build_topo = [&](Value v) -> void {
+  std::function<void(Value)> build_topo = [&](const Value& v) -> void {
     if (!visited.contains(v.Id())) {
       visited.insert(v.Id());
       for (auto& child : v.Prev()) {
@@ -25,7 +26,11 @@ void Value::Backward() {
   }
 }
 
-auto operator/(const Value& lhs, const Value& rhs) -> Value {
+Value operator/(const Value& lhs, double rhs) { return lhs / Value{rhs}; }
+
+Value operator/(double lhs, const Value& rhs) { return Value{lhs} / rhs; }
+
+Value operator/(const Value& lhs, const Value& rhs) {
   double l_data = lhs.Data();
   double r_data = rhs.Data();
 
@@ -43,7 +48,7 @@ auto operator/(const Value& lhs, const Value& rhs) -> Value {
   return out;
 }
 
-auto operator-(const Value& lhs, const Value& rhs) -> Value {
+Value operator-(const Value& lhs, const Value& rhs) {
   Value out(lhs.Data() - rhs.Data(), {lhs, rhs});
   out.m_state_->op_ = Operation::kSubtract;
   std::function<void(double)> backward = [lhs, rhs](double out_grad) -> void {
@@ -54,7 +59,7 @@ auto operator-(const Value& lhs, const Value& rhs) -> Value {
   return out;
 }
 
-auto operator+(const Value& lhs, const Value& rhs) -> Value {
+Value operator+(const Value& lhs, const Value& rhs) {
   Value out(lhs.m_state_->data_ + rhs.m_state_->data_, {lhs, rhs});
   out.m_state_->op_ = Operation::kAdd;
 
@@ -65,7 +70,7 @@ auto operator+(const Value& lhs, const Value& rhs) -> Value {
   return out;
 }
 
-auto operator*(const Value& lhs, const Value& rhs) -> Value {
+Value operator*(const Value& lhs, const Value& rhs) {
   Value out(lhs.m_state_->data_ * rhs.m_state_->data_, {lhs, rhs});
   out.m_state_->op_ = Operation::kMultiply;
 
@@ -76,7 +81,7 @@ auto operator*(const Value& lhs, const Value& rhs) -> Value {
   return out;
 }
 
-auto Value::Tanh() -> Value {
+Value Value::Tanh() {
   double x = this->Data();
   double tanh_x = std::tanh(x);
   Value out = Value(tanh_x, {*this});
@@ -88,7 +93,7 @@ auto Value::Tanh() -> Value {
   return out;
 }
 
-auto Value::Pow(double other) const -> Value {
+Value Value::Pow(double other) const {
   Value out(std::pow(this->Data(), other), {*this});
   out.m_state_->op_ = Operation::kPower;
 
@@ -98,7 +103,7 @@ auto Value::Pow(double other) const -> Value {
   return out;
 }
 
-auto Value::Exp() -> Value {
+Value Value::Exp() {
   double x = this->Data();
   double e = std::exp(x);
   Value out(e, {*this});
@@ -109,38 +114,34 @@ auto Value::Exp() -> Value {
   return out;
 }
 
-auto operator*(double lhs, const Value& rhs) -> Value {
+Value operator*(double lhs, const Value& rhs) {
   Value out(lhs * rhs.Data(), {rhs});
   out.m_state_->op_ = Operation::kMultiply;
   out.SetBackward([lhs, rhs](double out_grad) -> void { rhs.GradRef() += lhs * out_grad; });
   return out;
 }
 
-auto operator*(const Value& lhs, double rhs) -> Value {
-  return rhs * lhs;
-}
+Value operator*(const Value& lhs, double rhs) { return rhs * lhs; }
 
-auto operator-(double lhs, const Value& rhs) -> Value {
+Value operator-(double lhs, const Value& rhs) {
   Value out(lhs - rhs.Data(), {rhs});
   out.m_state_->op_ = Operation::kSubtract;
   out.SetBackward([rhs](double out_grad) -> void { rhs.GradRef() += -1 * out_grad; });
   return out;
 }
 
-auto operator-(const Value& lhs, double rhs) -> Value {
+Value operator-(const Value& lhs, double rhs) {
   Value out(lhs.Data() - rhs, {lhs});
   out.m_state_->op_ = Operation::kSubtract;
   out.SetBackward([lhs](double out_grad) -> void { lhs.GradRef() += out_grad; });
   return out;
 }
 
-auto operator+(double lhs, const Value& rhs) -> Value {
+Value operator+(double lhs, const Value& rhs) {
   Value out(lhs + rhs.Data(), {rhs});
   out.m_state_->op_ = Operation::kAdd;
   out.SetBackward([rhs](double out_grad) -> void { rhs.GradRef() += out_grad; });
   return out;
 }
 
-auto operator+(const Value& lhs, double rhs) -> Value {
-  return rhs + lhs;
-}
+Value operator+(const Value& lhs, double rhs) { return rhs + lhs; }

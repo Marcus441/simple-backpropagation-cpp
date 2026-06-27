@@ -7,23 +7,24 @@
 #include "util/graphing.hpp"
 #include "value.hpp"
 
-auto ForwardPass(MLP& mlp, const std::vector<std::vector<double>>& xs) -> std::vector<Value> {
+std::vector<Value> ForwardPass(MLP& mlp, const std::vector<std::vector<double>>& xs) {
   std::vector<Value> preds;
+  preds.reserve(xs.size());
   for (const auto& x : xs) {
     preds.emplace_back(mlp(x));
   }
   return preds;
 }
 
-auto ComputeLoss(const std::vector<Value>& preds, const std::vector<double>& y) -> Value {
-  Value err_sum_squared{};
-  for (size_t i = 0; i < preds.size(); ++i) {
-    err_sum_squared = err_sum_squared + (preds[i] - y[i]).Pow(2);
+Value ComputeLoss(const std::vector<Value>& preds, const std::vector<double>& y) {
+  Value loss = (preds[0] - y[0]).Pow(2);
+  for (size_t i = 1; i < preds.size(); ++i) {
+    loss = loss + (preds[i] - y[i]).Pow(2);
   }
-  return err_sum_squared / static_cast<int>(preds.size());
+  return loss / static_cast<double>(preds.size());
 }
 
-auto Step(MLP& mlp, double learning_rate) -> void {
+void Step(MLP& mlp, double learning_rate) {
   auto params = mlp.Parameters().lock();
   for (auto& p : *params) {
     p.SetData(p.Data() - (learning_rate * p.Grad()));

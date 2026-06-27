@@ -1,6 +1,8 @@
 #include "neuron.hpp"
 
 #include <cassert>
+#include <memory>
+#include <vector>
 
 #include "value.hpp"
 
@@ -20,7 +22,7 @@ Neuron::Neuron(int n_inputs) {
   }
 }
 
-auto Neuron::operator()(const std::vector<Value>& x) const -> Value {
+Value Neuron::operator()(const std::vector<Value>& x) const {
   assert(x.size() == parameters_->size() - 1);
 
   // Initialize with the bias

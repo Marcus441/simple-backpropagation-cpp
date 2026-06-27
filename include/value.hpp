@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <functional>
 #include <initializer_list>
 #include <memory>
@@ -22,48 +23,50 @@ class Value {
  public:
   Value() : Value(0.0) {}
   // Base constructor
-  Value(double data) : m_state_(std::make_shared<State>(data)) {}
+  explicit Value(double data) : m_state_(std::make_shared<State>(data)) {}
 
   // Graph constructor
   Value(double data, std::initializer_list<Value> children)
       : m_state_(std::make_shared<State>(data, children)) {}
 
   // Addition
-  friend auto operator+(const Value& lhs, const Value& rhs) -> Value;
-  friend auto operator+(double lhs, const Value& rhs) -> Value;
-  friend auto operator+(const Value& lhs, double rhs) -> Value;
+  friend Value operator+(const Value& lhs, const Value& rhs);
+  friend Value operator+(double lhs, const Value& rhs);
+  friend Value operator+(const Value& lhs, double rhs);
 
   // Subtraction
-  friend auto operator-(const Value& lhs, const Value& rhs) -> Value;
-  friend auto operator-(double lhs, const Value& rhs) -> Value;
-  friend auto operator-(const Value& lhs, double rhs) -> Value;
+  friend Value operator-(const Value& lhs, const Value& rhs);
+  friend Value operator-(double lhs, const Value& rhs);
+  friend Value operator-(const Value& lhs, double rhs);
 
   // Multiplication
-  friend auto operator*(const Value& lhs, const Value& rhs) -> Value;
-  friend auto operator*(double lhs, const Value& rhs) -> Value;
-  friend auto operator*(const Value& lhs, double rhs) -> Value;
+  friend Value operator*(const Value& lhs, const Value& rhs);
+  friend Value operator*(double lhs, const Value& rhs);
+  friend Value operator*(const Value& lhs, double rhs);
 
   // Division
-  friend auto operator/(const Value& lhs, const Value& rhs) -> Value;
+  friend Value operator/(const Value& lhs, const Value& rhs);
+  friend Value operator/(const Value& lhs, double rhs);
+  friend Value operator/(double lhs, const Value& rhs);
 
   // Accessors
-  [[nodiscard]] auto Label() const -> const std::string& { return m_state_->label_; }
-  [[nodiscard]] auto Data() const -> double { return m_state_->data_; }
-  [[nodiscard]] auto Grad() const -> double { return m_state_->grad_; }
-  [[nodiscard]] auto Prev() const -> std::vector<Value> { return m_state_->prev_; }
-  [[nodiscard]] auto Op() const -> Operation { return m_state_->op_; }
-  [[nodiscard]] auto Id() const -> const void* { return m_state_.get(); }
+  [[nodiscard]] const std::string& Label() const { return m_state_->label_; }
+  [[nodiscard]] double Data() const { return m_state_->data_; }
+  [[nodiscard]] double Grad() const { return m_state_->grad_; }
+  [[nodiscard]] std::vector<Value> Prev() const { return m_state_->prev_; }
+  [[nodiscard]] Operation Op() const { return m_state_->op_; }
+  [[nodiscard]] const void* Id() const { return m_state_.get(); }
   void Backward();
 
   // Setters
-  void Label(std::string label) { m_state_->label_ = label; }
-  void SetData(double d) { m_state_->data_ = d; };
-  void ZeroGrad() { m_state_->grad_ = 0; };
+  void Label(std::string label) { m_state_->label_ = std::move(label); }
+  void SetData(double d) { m_state_->data_ = d; }
+  void ZeroGrad() { m_state_->grad_ = 0; }
 
   // Math
-  auto Tanh() -> Value;
-  auto Exp() -> Value;
-  [[nodiscard]] auto Pow(double other) const -> Value;
+  Value Tanh();
+  Value Exp();
+  [[nodiscard]] Value Pow(double other) const;
 
   void ClearGraph() {
     m_state_->backward_ = nullptr;
@@ -71,7 +74,7 @@ class Value {
   }
 
  private:
-  [[nodiscard]] auto GradRef() const -> double& { return m_state_->grad_; }
+  [[nodiscard]] double& GradRef() const { return m_state_->grad_; }
   struct State {
     double grad_{0.0};
     double data_;

@@ -12,8 +12,9 @@ MLP::MLP(std::initializer_list<LayerSize> sizes) {
   }
 }
 
-auto MLP::operator()(std::vector<double> x) -> Value {
+Value MLP::operator()(const std::vector<double>& x) {
   std::vector<Value> input;
+  input.reserve(x.size());
   for (double d : x) {
     input.emplace_back(d);
   }

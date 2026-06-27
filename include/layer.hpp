@@ -10,8 +10,8 @@ struct LayerSize {
 };
 class Layer {
  public:
-  Layer(LayerSize s);
-  auto operator()(const std::vector<Value>& x) const -> std::vector<Value>;
+  explicit Layer(LayerSize s);
+  std::vector<Value> operator()(const std::vector<Value>& x) const;
   [[nodiscard]] auto Parameters() const -> std::weak_ptr<std::vector<Value>> {
     return parameters_;
   };

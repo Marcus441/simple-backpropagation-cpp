@@ -6,10 +6,10 @@
 
 class Neuron {
  public:
-  Neuron(int n_inputs);
-  auto operator()(const std::vector<Value>& x) const -> Value;
+  explicit Neuron(int n_inputs);
+  Value operator()(const std::vector<Value>& x) const;
 
-  [[nodiscard]] auto Parameters() const -> std::weak_ptr<std::vector<Value>> { return parameters_; }
+  [[nodiscard]] std::weak_ptr<std::vector<Value>> Parameters() const { return parameters_; }
 
  private:
   static std::mt19937 rng;
