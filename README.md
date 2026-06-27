@@ -106,11 +106,10 @@ cmake --build build --preset debug
 | `debug` | Debug build (`-g -Og`) |
 | `release` | Optimised build (`-O3`) |
 | `relwithdebinfo` | Optimised with debug info (`-O2 -g`) |
-| `debug-san` | Debug + AddressSanitizer + UBSanitizer |
 
 ```sh
 cmake --build build --preset release
-cmake --build build --preset debug-san
+cmake --build build --preset debug
 ```
 
 ## Demo
